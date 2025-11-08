@@ -1,4 +1,4 @@
-import { devices } from "../../constants/device";
+import { devices } from "../../constants";
 import Device from "../Device/Device";
 
 const Sidebar = () => {

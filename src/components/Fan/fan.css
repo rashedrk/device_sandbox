@@ -1,0 +1,35 @@
+ @keyframes spin {
+     from {
+         transform: rotate(0deg);
+     }
+
+     to {
+         transform: rotate(360deg);
+     }
+ }
+
+ .slider::-webkit-slider-thumb {
+     appearance: none;
+     width: 16px;
+     height: 16px;
+     border-radius: 50%;
+     background: white;
+     cursor: pointer;
+ }
+
+ .slider::-moz-range-thumb {
+     width: 16px;
+     height: 16px;
+     border-radius: 50%;
+     background: white;
+     cursor: pointer;
+     border: none;
+ }
+
+ .slider:disabled::-webkit-slider-thumb {
+     cursor: not-allowed;
+ }
+
+ .slider:disabled::-moz-range-thumb {
+     cursor: not-allowed;
+ }
