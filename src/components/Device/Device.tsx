@@ -1,10 +1,21 @@
 import { Fan, LightbulbIcon } from "lucide-react";
 import type { TDevice } from "../../types";
 import { Tooltip } from "react-tooltip";
+import { useEffect, useState } from "react";
 
 const Device = ({ device }: { device: TDevice }) => {
   //TODO: Add drag functionality & add the icon white color for active
   const { name, icon } = device;
+   const [showTooltip, setShowTooltip] = useState(true);
+   useEffect(() => {
+      // Auto-hide after 3 seconds
+      //TODO: make this better with context or redux
+      const timer = setTimeout(() => {
+        setShowTooltip(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+  }, []);
   return (
     <>
       <div 
@@ -22,7 +33,7 @@ const Device = ({ device }: { device: TDevice }) => {
         id="tooltip"
         content="Drag items from here"
         place="right"
-        isOpen
+        isOpen={showTooltip}
         style={{background: "#2B7FFF", width: "227px", padding: "24px", borderRadius: "8px"}}
       />
     </>
