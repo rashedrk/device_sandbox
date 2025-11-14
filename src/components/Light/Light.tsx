@@ -8,7 +8,7 @@ const Light = ({
   updateDevice,
 }: {
   device: TDevice;
-  updateDevice: (id: string, changes: Partial<TDevice>) => void;
+  updateDevice: (changes: Partial<TDevice>) => void;
 }) => {
   const settings = device.settings as LightSettings;
 
@@ -18,7 +18,7 @@ const Light = ({
   const [glowLevel, setGlowLevel] = useState<number>(0);
 
   useEffect(() => {
-    updateDevice(device.id, { settings: { power, brightness, color } });
+    updateDevice({ settings: { power, brightness, color } });
   }, [power, brightness, color, device.id, updateDevice]);
 
   useEffect(() => {

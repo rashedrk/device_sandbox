@@ -10,7 +10,7 @@ const Fan = ({
   updateDevice,
 }: {
   device: TDevice;
-  updateDevice: (id: string, changes: Partial<TDevice>) => void;
+  updateDevice: (changes: Partial<TDevice>) => void;
 }) => {
   const settings = device.settings as FanSettings;
 
@@ -18,7 +18,7 @@ const Fan = ({
   const [speed, setSpeed] = useState<number>(settings.speed);
 
   useEffect(() => {
-    updateDevice(device.id, { settings: { power: isPowerOn, speed } });
+    updateDevice( { settings: { power: isPowerOn, speed } });
   }, [isPowerOn, speed, device.id, updateDevice]);
 
   return (
