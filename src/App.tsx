@@ -1,13 +1,16 @@
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Sandbox from "./components/Sandbox/Sandbox";
 
 function App() {
   return (
-    <div className="flex h-screen w-screen bg-[#030712] text-gray-200 overflow-hidden">
-      {/* <Sidebar onDragStart={() => {}} /> */}
-      <Sidebar />
-      <Sandbox />
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex h-screen w-screen bg-[#030712] text-gray-200 overflow-hidden">
+        <Sidebar />
+        <Sandbox />
+      </div>
+    </DndProvider>
   );
 }
 

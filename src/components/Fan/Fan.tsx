@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./fan.css";
 import { bladeConfigs } from "../../constants";
 import { getFanAnimationDuration } from "../../utils/animation";
 import ControlPanel from "../ControlPanel/ControlPanel";
+import type { TDevice, FanSettings } from "../../types";
 
-const Fan = () => {
-  const [isPowerOn, setIsPowerOn] = useState(false);
-  const [speed, setSpeed] = useState(64);
+const Fan = ({
+  device,
+  updateDevice,
+}: {
+  device: TDevice;
+  updateDevice: (id: string, changes: Partial<TDevice>) => void;
+}) => {
+  const settings = device.settings as FanSettings;
+
+  const [isPowerOn, setIsPowerOn] = useState<boolean>(settings.power);
+  const [speed, setSpeed] = useState<number>(settings.speed);
+
+  useEffect(() => {
+    updateDevice(device.id, { settings: { power: isPowerOn, speed } });
+  }, [isPowerOn, speed, device.id, updateDevice]);
 
   return (
     <div className="flex flex-col items-center justify-between gap-30">

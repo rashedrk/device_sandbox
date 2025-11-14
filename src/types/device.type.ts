@@ -14,3 +14,8 @@ export type TDevice = {
     type: "light" | "fan";
     settings: LightSettings | FanSettings;
 }
+
+export type TDeviceTemplate = Omit<TDevice, 'id'> & {
+    name: string;
+    icon: string;
+}

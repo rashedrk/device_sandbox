@@ -7,8 +7,8 @@ const Sidebar = () => {
       <div className="">
         <h2 className="text-base text-gray-100">Devices</h2>
         <div className="flex flex-col gap-3 mt-4">
-          {devices.map((device) => (
-            <Device device={device} />
+          {devices.map((device, index) => (
+            <Device key={`${device.type}-${index}`} device={device} />
           ))}
         </div>
       </div>
