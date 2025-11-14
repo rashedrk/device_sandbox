@@ -1,15 +1,28 @@
 import { useState } from "react";
 import Fan from "../Fan/Fan";
-
-type DeviceInstance = {
-  id: string;
-  type: "fan" | "light";
-};
+import Light from "../Light/Light";
+import type { TDevice } from "../../types";
 
 const Sandbox = () => {
-  const [devices] = useState<DeviceInstance[]>([
-    { id: "fan-1", type: "fan" }, // For demonstration, show fan by default
+  const [devices, setDevices] = useState<TDevice[]>([
+    {
+      id: "light-1",
+      type: "light",
+      settings: {
+        power: false,
+        brightness: 70,
+        color: "#FFE5B4",
+      },
+    },
   ]);
+
+  const updateDevice = (id: string, changes: Partial<TDevice>) => {
+    setDevices((prevDevices) =>
+      prevDevices.map((device) =>
+        device.id === id ? { ...device, ...changes } : device
+      )
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col m-6">
@@ -24,7 +37,17 @@ const Sandbox = () => {
           </div>
         ) : (
           <div className="h-full flex justify-center items-center">
-            <Fan />
+            {devices.map((device) =>
+              device.type === "light" ? (
+                <Light
+                  key={device.id}
+                  device={device}
+                  updateDevice={updateDevice}
+                />
+              ) : (
+                <Fan key={device.id} />
+              )
+            )}
           </div>
         )}
       </div>

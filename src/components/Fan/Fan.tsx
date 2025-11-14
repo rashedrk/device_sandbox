@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./fan.css"
+import "./fan.css";
 import { bladeConfigs } from "../../constants";
 import { getFanAnimationDuration } from "../../utils/animation";
 import ControlPanel from "../ControlPanel/ControlPanel";
@@ -7,8 +7,6 @@ import ControlPanel from "../ControlPanel/ControlPanel";
 const Fan = () => {
   const [isPowerOn, setIsPowerOn] = useState(false);
   const [speed, setSpeed] = useState(64);
-
-
 
   return (
     <div className="flex flex-col items-center justify-between gap-30">
@@ -19,7 +17,10 @@ const Fan = () => {
           className="absolute inset-0 flex items-center justify-center"
           style={{
             animation: isPowerOn
-              ? `spin ${getFanAnimationDuration(isPowerOn, speed)}s linear infinite`
+              ? `spin ${getFanAnimationDuration(
+                  isPowerOn,
+                  speed
+                )}s linear infinite`
               : "none",
           }}
         >
@@ -44,7 +45,19 @@ const Fan = () => {
       </div>
 
       {/* Controls */}
-    <ControlPanel isPowerOn={isPowerOn} setIsPowerOn={setIsPowerOn} speed={speed} setSpeed={setSpeed} />
+      <ControlPanel
+        config={{
+          power: {
+            value: isPowerOn,
+            onChange: setIsPowerOn,
+          },
+          slider: {
+            label: "Speed",
+            value: speed,
+            onChange: setSpeed,
+          },
+        }}
+      />
     </div>
   );
 };
