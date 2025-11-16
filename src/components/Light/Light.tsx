@@ -67,7 +67,7 @@ const Light = ({
 
 
   return (
-    <div className="w-[80vw] h-[90vh] flex flex-col items-center justify-between p-8 pb-4 box-border overflow-hidden">
+    <div className="h-[90vh] flex flex-col items-center justify-between p-8 pb-4 box-border overflow-hidden">
       {/* Light Section */}
       <div className="flex-1 flex flex-col items-center justify-center gap-2">
         {/* Light Holder */}
