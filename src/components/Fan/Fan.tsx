@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { bladeConfigs } from "../../constants";
 import { getFanAnimationDuration } from "../../utils/animation";
 import ControlPanel from "../ControlPanel/ControlPanel";
@@ -12,13 +12,19 @@ const Fan = ({
   updateDevice: (changes: Partial<TDevice>) => void;
 }) => {
   const settings = device.settings as FanSettings;
+  const updateDeviceRef = useRef(updateDevice);
 
   const [isPowerOn, setIsPowerOn] = useState<boolean>(settings.power);
   const [speed, setSpeed] = useState<number>(settings.speed);
 
+  // Update the ref when updateDevice changes
   useEffect(() => {
-    updateDevice({ settings: { power: isPowerOn, speed } });
-  }, [isPowerOn, speed, device.id, updateDevice]);
+    updateDeviceRef.current = updateDevice;
+  }, [updateDevice]);
+
+  useEffect(() => {
+    updateDeviceRef.current({ settings: { power: isPowerOn, speed } });
+  }, [isPowerOn, speed]);
 
   return (
     <div className="h-[90vh] flex flex-col items-center justify-between p-8 pb-4 box-border overflow-hidden">
@@ -31,15 +37,16 @@ const Fan = ({
             className="absolute inset-0 flex items-center justify-center"
             style={{
               animation: isPowerOn
-                ? `spin ${getFanAnimationDuration(
+                ? `fanSpin ${getFanAnimationDuration(
                     isPowerOn,
                     speed
                   )}s linear infinite`
                 : "none",
             }}
           >
-            {bladeConfigs.map((blade) => (
+            {bladeConfigs.map((blade, index) => (
               <div
+                key={`blade-${blade.angle}-${index}`}
                 className="absolute top-1/2 left-1/2 w-[134px] h-14 rounded-r-full opacity-90 origin-center-left shadow-[inset_0_2px_10px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.3)]"
                 style={{
                   background:

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useDrop } from "react-dnd";
 import Fan from "../Fan/Fan";
 import Light from "../Light/Light";
@@ -11,11 +11,14 @@ const Sandbox = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
 
-  const updateDevice = (changes: Partial<TDevice>) => {
-    if (device) {
-      setDevice({ ...device, ...changes });
-    }
-  };
+  const updateDevice = useCallback(
+    (changes: Partial<TDevice>) => {
+      if (device) {
+        setDevice({ ...device, ...changes });
+      }
+    },
+    [device]
+  );
 
   const addDevice = (
     deviceType: "light" | "fan",

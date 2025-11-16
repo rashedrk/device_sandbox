@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { TDevice, LightSettings } from "../../types";
 import ControlPanel from "../ControlPanel/ControlPanel";
 import { paletteColors } from "../../constants";
@@ -13,15 +13,21 @@ const Light = ({
   updateDevice: (changes: Partial<TDevice>) => void;
 }) => {
   const settings = device.settings as LightSettings;
+  const updateDeviceRef = useRef(updateDevice);
 
   const [power, setPower] = useState<boolean>(settings.power);
   const [brightness, setBrightness] = useState<number>(settings.brightness);
   const [color, setColor] = useState<string>(settings.color);
   const [glowLevel, setGlowLevel] = useState<number>(0);
 
+  // Update the ref when updateDevice changes
   useEffect(() => {
-    updateDevice({ settings: { power, brightness, color } });
-  }, [power, brightness, color, device.id, updateDevice]);
+    updateDeviceRef.current = updateDevice;
+  }, [updateDevice]);
+
+  useEffect(() => {
+    updateDeviceRef.current({ settings: { power, brightness, color } });
+  }, [power, brightness, color]);
 
   useEffect(() => {
     if (power) {

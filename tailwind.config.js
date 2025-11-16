@@ -23,19 +23,10 @@ export default {
                         transform: 'translateX(-50%) translateY(90px)',
                     },
                 },
-                spin: {
-                    'from': {
-                        transform: 'rotate(0deg)',
-                    },
-                    'to': {
-                        transform: 'rotate(360deg)',
-                    },
-                },
             },
             animation: {
                 'toast-slide': 'toastSlide 0.4s ease forwards',
                 'fade-out': 'fadeOut 0.5s ease forwards',
-                'spin': 'spin 1s linear infinite',
             },
         },
     },
