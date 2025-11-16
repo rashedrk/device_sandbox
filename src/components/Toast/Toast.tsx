@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { TToastProps } from "../../types/toast.type";
+import type { TToastProps } from "../../types";
 
 const Toast = ({
   message,
