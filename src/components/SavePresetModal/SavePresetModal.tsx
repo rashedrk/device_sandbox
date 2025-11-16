@@ -1,22 +1,21 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import Toast from "../Toast/Toast";
 
 interface SavePresetModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave?: (presetName: string) => void;
   isSaving?: boolean;
 }
 
-const SavePresetModal = ({ isOpen, onClose }: SavePresetModalProps) => {
+const SavePresetModal = ({ isOpen, onClose, onSave }: SavePresetModalProps) => {
   const [presetName, setPresetName] = useState("");
-  const [showToast, setShowToast] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
     console.log("Saving preset:", presetName);
-    setShowToast(true);
+    onSave?.(presetName);
     setPresetName("");
     onClose();
   };
@@ -73,8 +72,6 @@ const SavePresetModal = ({ isOpen, onClose }: SavePresetModalProps) => {
           </div>
         </div>
       </div>
-
-      <Toast isVisible={showToast} message="Preset saved" onClose={() => setShowToast(false)}/>
     </>
   );
 };

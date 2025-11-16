@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useDrop } from "react-dnd";
 import Fan from "../Fan/Fan";
 import Light from "../Light/Light";
+import Toast from "../Toast/Toast";
 import type { TDevice, LightSettings, FanSettings } from "../../types";
 import SavePresetModal from "../SavePresetModal/SavePresetModal";
 
 const Sandbox = () => {
   const [device, setDevice] = useState<TDevice>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const updateDevice = (changes: Partial<TDevice>) => {
     if (device) {
@@ -31,6 +33,11 @@ const Sandbox = () => {
     setDevice(undefined);
   };
 
+  const handlePresetSave = (presetName: string) => {
+    console.log("Preset saved:", presetName);
+    setShowToast(true);
+  };
+
   const [{ isOver }, drop] = useDrop(
     () => ({
       accept: "DEVICE",
@@ -49,7 +56,7 @@ const Sandbox = () => {
 
   return (
     <>
-      <div className="flex-1 flex flex-col m-6">
+      <div className="flex-1 flex flex-col m-6 ">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-gray-100">Testing Canvas</h1>
           {device && (
@@ -72,7 +79,7 @@ const Sandbox = () => {
 
         <div
           ref={drop as unknown as React.LegacyRef<HTMLDivElement>}
-          className="flex-1 bg-[#0A101D] border border-[#1E2939] rounded-[14px] min-h-[400px]"
+          className="flex-1 bg-[#0A101D] border border-[#1E2939] rounded-[14px] min-h-[400px] relative"
           style={{
             backgroundColor: isOver ? "#0F1829" : "#0A101D",
             transition: "background-color 0.2s ease",
@@ -101,12 +108,19 @@ const Sandbox = () => {
               )}
             </div>
           )}
+        <Toast
+          isVisible={showToast}
+          message="Preset saved"
+          onClose={() => setShowToast(false)}
+        />
         </div>
+
       </div>
 
       <SavePresetModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSave={handlePresetSave}
         isSaving={false}
       />
     </>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./fan.css";
 import { bladeConfigs } from "../../constants";
 import { getFanAnimationDuration } from "../../utils/animation";
 import ControlPanel from "../ControlPanel/ControlPanel";
@@ -18,7 +17,7 @@ const Fan = ({
   const [speed, setSpeed] = useState<number>(settings.speed);
 
   useEffect(() => {
-    updateDevice( { settings: { power: isPowerOn, speed } });
+    updateDevice({ settings: { power: isPowerOn, speed } });
   }, [isPowerOn, speed, device.id, updateDevice]);
 
   return (

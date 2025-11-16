@@ -53,6 +53,7 @@ const Device = ({ device }: { device: TDeviceTemplate }) => {
           width: "227px",
           padding: "24px",
           borderRadius: "8px",
+          zIndex: 1000,
         }}
       />
     </>
