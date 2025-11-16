@@ -57,24 +57,26 @@ const Sandbox = () => {
   return (
     <>
       <div className="flex-1 flex flex-col m-6 ">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 h-10">
           <h1 className="text-gray-100">Testing Canvas</h1>
-          {device && (
-            <div className="flex gap-1">
-              <button
-                onClick={removeDevice}
-                className="px-3 py-2 bg-[#1E2939] border border-[#364153] text-gray-300 rounded-lg hover:bg-[#334155]/30 transition-colors cursor-pointer"
-              >
-                Clear
-              </button>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-3 py-2 bg-[#2B7FFF] text-white rounded-lg hover:bg-[#2563eb] transition-colors cursor-pointer"
-              >
-                Save Preset
-              </button>
-            </div>
-          )}
+          <div className="flex gap-1">
+            {device && (
+              <>
+                <button
+                  onClick={removeDevice}
+                  className="px-3 py-2 bg-[#1E2939] border border-[#364153] text-gray-300 rounded-lg hover:bg-[#334155]/30 transition-colors cursor-pointer"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-3 py-2 bg-[#2B7FFF] text-white rounded-lg hover:bg-[#2563eb] transition-colors cursor-pointer"
+                >
+                  Save Preset
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         <div
@@ -108,13 +110,12 @@ const Sandbox = () => {
               )}
             </div>
           )}
-        <Toast
-          isVisible={showToast}
-          message="Preset saved"
-          onClose={() => setShowToast(false)}
-        />
+          <Toast
+            isVisible={showToast}
+            message="Preset saved"
+            onClose={() => setShowToast(false)}
+          />
         </div>
-
       </div>
 
       <SavePresetModal
