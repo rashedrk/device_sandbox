@@ -1,23 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import type { TToastProps } from "../../types/toast.type";
 
-interface ToastProps {
-  message: string;
-  type?: "success" | "error";
-  duration?: number;
-  onClose?: () => void;
-  isVisible?: boolean;
-}
-
-const Toast: React.FC<ToastProps> = ({
+const Toast = ({
   message,
   type = "success",
   duration = 2500,
   onClose,
   isVisible = true,
-}) => {
+} : TToastProps) => {
   const onCloseRef = useRef(onClose);
 
-  // Keep the ref updated with the latest onClose
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
