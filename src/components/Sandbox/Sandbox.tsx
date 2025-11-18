@@ -22,10 +22,12 @@ const Sandbox = () => {
 
   const addDevice = (
     deviceType: "light" | "fan",
-    settings: LightSettings | FanSettings
+    settings: LightSettings | FanSettings,
+    deviceName?: string
   ) => {
     const newDevice: TDevice = {
       id: `${deviceType}-${Date.now()}`,
+      name: deviceName || (deviceType === "light" ? "Light" : "Fan"),
       type: deviceType,
       settings,
     };
@@ -43,12 +45,13 @@ const Sandbox = () => {
 
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "DEVICE",
+      accept: ["DEVICE", "PRESET"],
       drop: (item: {
         deviceType: "light" | "fan";
         settings: LightSettings | FanSettings;
+        presetName?: string;
       }) => {
-        addDevice(item.deviceType, item.settings);
+        addDevice(item.deviceType, item.settings, item.presetName);
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
