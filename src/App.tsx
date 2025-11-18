@@ -4,16 +4,18 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Sandbox from "./components/Sandbox/Sandbox";
 import { useGetAllDevicesQuery } from "./redux/features/device/deviceApi";
 import Loader from "./components/Loader/Loader";
+import { useGetAllPresetsQuery } from "./redux/features/preset/presetApi";
 
 function App() {
   const { data: devices, isLoading } = useGetAllDevicesQuery(undefined);
+  const {data: presets, isLoading: presetsLoading} = useGetAllPresetsQuery(undefined);
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex h-screen w-screen bg-[#030712] text-gray-200 overflow-hidden">
         {
-          isLoading ? <Loader/> :
+          (isLoading || presetsLoading) ? <Loader/> :
           <>
-            <Sidebar devices={devices?.data} />
+            <Sidebar devices={devices?.data} presets={presets?.data} />
             <Sandbox />
           </>
         }

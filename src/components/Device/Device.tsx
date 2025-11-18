@@ -1,22 +1,29 @@
 import { Fan, LightbulbIcon } from "lucide-react";
-import type { TDevice} from "../../types";
+import type { TDevice, TPreset } from "../../types";
 import { Tooltip } from "react-tooltip";
 import { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 
-const Device = ({ device }: { device: TDevice }) => {
-  const { name, type, settings } = device;
+const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
   const [showTooltip, setShowTooltip] = useState(true);
+
+  // Handle both device and preset data
+  const itemData = preset ? preset.devices : device;
+  const displayName = preset ? preset.name : device?.name;
+
+  const { name, type, settings } = itemData || {};
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: "DEVICE",
-      item: { deviceType: type, settings },
+      type: preset ? "PRESET" : "DEVICE",
+      item: preset
+        ? { deviceType: type, settings, presetName: preset.name }
+        : { deviceType: type, settings },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [type, settings]
+    [type, settings, preset]
   );
 
   useEffect(() => {
@@ -27,6 +34,8 @@ const Device = ({ device }: { device: TDevice }) => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  if (!itemData || !type || !settings) return null;
 
   return (
     <>
@@ -41,7 +50,7 @@ const Device = ({ device }: { device: TDevice }) => {
         ) : (
           <Fan size={20} className="shrink-0 text-gray-400" />
         )}
-        <span className="text-base">{name}</span>
+        <span className="text-base">{displayName}</span>
       </div>
       <Tooltip
         id="tooltip"
