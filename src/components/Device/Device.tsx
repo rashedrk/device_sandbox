@@ -1,11 +1,11 @@
 import { Fan, LightbulbIcon } from "lucide-react";
-import type { TDeviceTemplate } from "../../types";
+import type { TDevice} from "../../types";
 import { Tooltip } from "react-tooltip";
 import { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 
-const Device = ({ device }: { device: TDeviceTemplate }) => {
-  const { name, icon, type, settings } = device;
+const Device = ({ device }: { device: TDevice }) => {
+  const { name, type, settings } = device;
   const [showTooltip, setShowTooltip] = useState(true);
 
   const [{ isDragging }, drag] = useDrag(
@@ -36,7 +36,7 @@ const Device = ({ device }: { device: TDeviceTemplate }) => {
         style={{ opacity: isDragging ? 0.5 : 1 }}
         {...(name === "Fan" && { "data-tooltip-id": "tooltip" })}
       >
-        {icon === "light" ? (
+        {type === "light" ? (
           <LightbulbIcon size={20} className="shrink-0 text-gray-400" />
         ) : (
           <Fan size={20} className="shrink-0 text-gray-400" />

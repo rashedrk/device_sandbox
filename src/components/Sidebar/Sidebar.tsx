@@ -1,14 +1,14 @@
-import { devices } from "../../constants";
+import type { TDevice } from "../../types";
 import Device from "../Device/Device";
 
-const Sidebar = () => {
+const Sidebar = ({ devices }: { devices: TDevice[] }) => {
   return (
     <div className="w-56 bg-[#101828] pt-4 px-4  flex flex-col gap-8 border-r border-[#1E2939]">
       <div className="">
         <h2 className="text-base text-gray-100">Devices</h2>
         <div className="flex flex-col gap-3 mt-4">
-          {devices.map((device, index) => (
-            <Device key={`${device.type}-${index}`} device={device} />
+          {devices.map((device) => (
+            <Device key={device.id} device={device} />
           ))}
         </div>
       </div>

@@ -11,6 +11,7 @@ export type FanSettings = {
 
 export type TDevice = {
     id: string;
+    name: string
     type: "light" | "fan";
     settings: LightSettings | FanSettings;
 }
