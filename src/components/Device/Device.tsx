@@ -7,10 +7,11 @@ import { selectActiveSidebarItem } from "../../redux/features/ui/uiSlice";
 import { useAppSelector } from "../../redux/hooks";
 
 const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
-  const [showTooltip, setShowTooltip] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(() => {
+    return !localStorage.getItem("deviceTooltipDismissed");
+  });
   const activeSidebarItem = useAppSelector(selectActiveSidebarItem);
   const isActive = activeSidebarItem === (device?.id || preset?.id || null);
-  console.log(device?.id);
 
   // Handle both device and preset data
   const itemData = preset ? preset.devices : device;
@@ -37,13 +38,14 @@ const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
   );
 
   useEffect(() => {
-    // Auto-hide after 3 seconds
-    const timer = setTimeout(() => {
-      setShowTooltip(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    if (showTooltip) {
+      const timer = setTimeout(() => {
+        setShowTooltip(false);
+        localStorage.setItem("deviceTooltipDismissed", "true");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showTooltip]);
 
   if (!itemData || !type || !settings) return null;
 
@@ -57,13 +59,27 @@ const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
         {...(isActive && { style: { background: "#646F7F" } })}
       >
         {type === "light" ? (
-          <LightbulbIcon size={20} className={`shrink-0 ${isActive ? "text-gray-200" : "text-gray-400"}`}/>
+          <LightbulbIcon
+            size={20}
+            className={`shrink-0 ${
+              isActive ? "text-gray-200" : "text-gray-400"
+            }`}
+          />
         ) : (
-          <Fan size={20} className={`shrink-0 ${isActive ? "text-gray-200" : "text-gray-400"}`} />
+          <Fan
+            size={20}
+            className={`shrink-0 ${
+              isActive ? "text-gray-200" : "text-gray-400"
+            }`}
+          />
         )}
         <span className="text-base">{displayName}</span>
       </div>
-      <div className={`h-[5px] w-[5px] rounded-full ${isActive ? "bg-[#2B7FFF]" : "bg-transparent"}`}></div>
+      <div
+        className={`h-[5px] w-[5px] rounded-full ${
+          isActive ? "bg-[#2B7FFF]" : "bg-transparent"
+        }`}
+      ></div>
       <Tooltip
         id="tooltip"
         content="Drag items from here"

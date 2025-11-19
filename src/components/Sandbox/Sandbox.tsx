@@ -13,7 +13,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setActiveSidebarItem } from "../../redux/features/ui/uiSlice";
 
 const Sandbox = () => {
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [device, setDevice] = useState<TDevice>();
   const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const Sandbox = () => {
     settings: LightSettings | FanSettings,
     deviceName?: string,
     presetId?: string,
-    deviceId?: string,
+    deviceId?: string
   ) => {
     const newDevice: TDevice = {
       id: deviceId || `device-${Date.now()}`,
@@ -45,8 +45,7 @@ const Sandbox = () => {
       type: deviceType,
       settings,
     };
-    console.log(deviceId);
-    
+
     setDevice(newDevice);
     setCurrentPresetId(presetId || null);
     dispatch(setActiveSidebarItem(presetId || deviceId));
@@ -55,6 +54,7 @@ const Sandbox = () => {
   const removeDevice = () => {
     setDevice(undefined);
     setCurrentPresetId(null);
+    dispatch(setActiveSidebarItem(null));
   };
 
   const handleSave = async () => {
@@ -114,7 +114,7 @@ const Sandbox = () => {
           item.settings,
           item.presetName,
           item.presetId,
-          item.deviceId,
+          item.deviceId
         );
       },
       collect: (monitor) => ({
@@ -141,8 +141,13 @@ const Sandbox = () => {
                 <button
                   onClick={() => handleSave()}
                   className="px-3 py-2 bg-[#2B7FFF] text-white rounded-lg hover:bg-[#2563eb] transition-colors cursor-pointer"
+                  disabled={isUpdating}
                 >
-                  {currentPresetId ? "Update Preset" : "Save Preset"}
+                  {isUpdating
+                    ? "Updating..."
+                    : currentPresetId
+                    ? "Update Preset"
+                    : "Save Preset"}
                 </button>
               </>
             )}

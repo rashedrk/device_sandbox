@@ -14,14 +14,13 @@ const SavePresetModal = ({ isOpen, onClose, onSave }: SavePresetModalProps) => {
   if (!isOpen) return null;
 
   const handleSave = () => {
-    console.log("Saving preset:", presetName);
+
     onSave?.(presetName);
     setPresetName("");
     onClose();
   };
 
   const handleCancel = () => {
-    console.log("cancel preset:", presetName);
     setPresetName("");
     onClose();
   };
