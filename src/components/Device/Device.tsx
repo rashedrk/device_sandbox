@@ -11,30 +11,34 @@ const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
     return !localStorage.getItem("deviceTooltipDismissed");
   });
   const activeSidebarItem = useAppSelector(selectActiveSidebarItem);
-  const isActive = activeSidebarItem === (device?.id || preset?.id || null);
+  const isActive = activeSidebarItem === (device?.id ?? preset?.id ?? null);
 
   // Handle both device and preset data
-  const itemData = preset ? preset.devices : device;
-  const displayName = preset ? preset.name : device?.name;
+  const itemData = preset?.devices ?? device;
+  const displayName = preset?.name ?? device?.name ?? "";
 
-  const { name, type, settings } = itemData || {};
+  const { name, type, settings } = itemData ?? {};
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: preset ? "PRESET" : "DEVICE",
       item: preset
         ? {
-            deviceType: type,
-            settings,
+            deviceType: type ?? "light",
+            settings: settings ?? {},
             presetName: preset.name,
             presetId: preset.id,
           }
-        : { deviceType: type, settings, deviceId: device?.id },
+        : {
+            deviceType: type ?? "light",
+            settings: settings ?? {},
+            deviceId: device?.id,
+          },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [type, settings, preset]
+    [type, settings, preset, device]
   );
 
   useEffect(() => {
@@ -54,9 +58,11 @@ const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
       <div
         ref={drag as unknown as React.LegacyRef<HTMLDivElement>}
         className="flex items-center gap-3 px-3 h-[46px] w-full bg-[#1E2939] border border-[#364153] rounded-[10px] text-gray-200 cursor-grab hover:bg-[#646F7F] active:cursor-grabbing"
-        style={{ opacity: isDragging ? 0.5 : 1 }}
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+          ...(isActive ? { background: "#646F7F" } : {}),
+        }}
         {...(name === "Fan" && { "data-tooltip-id": "tooltip" })}
-        {...(isActive && { style: { background: "#646F7F" } })}
       >
         {type === "light" ? (
           <LightbulbIcon
