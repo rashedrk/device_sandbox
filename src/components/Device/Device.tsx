@@ -17,7 +17,12 @@ const Device = ({ device, preset }: { device?: TDevice; preset?: TPreset }) => {
     () => ({
       type: preset ? "PRESET" : "DEVICE",
       item: preset
-        ? { deviceType: type, settings, presetName: preset.name }
+        ? {
+            deviceType: type,
+            settings,
+            presetName: preset.name,
+            presetId: preset.id,
+          }
         : { deviceType: type, settings },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),

@@ -5,11 +5,20 @@ import Light from "../Light/Light";
 import Toast from "../Toast/Toast";
 import type { TDevice, LightSettings, FanSettings } from "../../types";
 import SavePresetModal from "../SavePresetModal/SavePresetModal";
+import {
+  useCreatePresetMutation,
+  useUpdatePresetMutation,
+} from "../../redux/features/preset/presetApi";
 
 const Sandbox = () => {
   const [device, setDevice] = useState<TDevice>();
+  const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
+
+  const [createPreset, { isLoading: isCreating }] = useCreatePresetMutation();
+  const [updatePreset, { isLoading: isUpdating }] = useUpdatePresetMutation();
+  const isSaving = isCreating || isUpdating;
 
   const updateDevice = useCallback(
     (changes: Partial<TDevice>) => {
@@ -23,7 +32,8 @@ const Sandbox = () => {
   const addDevice = (
     deviceType: "light" | "fan",
     settings: LightSettings | FanSettings,
-    deviceName?: string
+    deviceName?: string,
+    presetId?: string
   ) => {
     const newDevice: TDevice = {
       id: `${deviceType}-${Date.now()}`,
@@ -32,15 +42,54 @@ const Sandbox = () => {
       settings,
     };
     setDevice(newDevice);
+    setCurrentPresetId(presetId || null);
   };
 
   const removeDevice = () => {
     setDevice(undefined);
+    setCurrentPresetId(null);
   };
 
-  const handlePresetSave = (presetName: string) => {
-    console.log("Preset saved:", presetName);
-    setShowToast(true);
+  const handleSave = async () => {
+    if (currentPresetId) {
+      await handlePresetSave();
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handlePresetSave = async (presetName?: string) => {
+    if (!device) return;
+    try {
+      if (currentPresetId) {
+        // Update existing preset, keep name unchanged
+        await updatePreset({
+          id: currentPresetId,
+          data: {
+            devices: {
+              name: device.name,
+              type: device.type,
+              settings: device.settings,
+            },
+          },
+        }).unwrap();
+        setShowToast(true);
+      } else if (presetName) {
+        // Create new preset, use modal name
+        await createPreset({
+          name: presetName,
+          devices: {
+            name: device.name,
+            type: device.type,
+            settings: device.settings,
+          },
+        }).unwrap();
+        setShowToast(true);
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Failed to save preset:", error);
+    }
   };
 
   const [{ isOver }, drop] = useDrop(
@@ -50,8 +99,14 @@ const Sandbox = () => {
         deviceType: "light" | "fan";
         settings: LightSettings | FanSettings;
         presetName?: string;
+        presetId?: string;
       }) => {
-        addDevice(item.deviceType, item.settings, item.presetName);
+        addDevice(
+          item.deviceType,
+          item.settings,
+          item.presetName,
+          item.presetId
+        );
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
@@ -75,10 +130,10 @@ const Sandbox = () => {
                   Clear
                 </button>
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => handleSave()}
                   className="px-3 py-2 bg-[#2B7FFF] text-white rounded-lg hover:bg-[#2563eb] transition-colors cursor-pointer"
                 >
-                  Save Preset
+                  {currentPresetId ? "Update Preset" : "Save Preset"}
                 </button>
               </>
             )}
@@ -128,7 +183,7 @@ const Sandbox = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handlePresetSave}
-        isSaving={false}
+        isSaving={isSaving}
       />
     </>
   );

@@ -19,7 +19,7 @@ export const presetApi = baseApi.injectEndpoints({
                 return {
                     url: '/presets',
                     method: 'POST',
-                    body: data,
+                    data: data,
                 };
             },
             invalidatesTags: ['Preset'],
@@ -29,18 +29,8 @@ export const presetApi = baseApi.injectEndpoints({
             query: ({ id, data }) => {
                 return {
                     url: `/presets/${id}`,
-                    method: 'PUT',
-                    body: data,
-                };
-            },
-            invalidatesTags: ['Preset'],
-        }),
-
-        deletePreset: build.mutation<void, string>({
-            query: (id) => {
-                return {
-                    url: `/presets/${id}`,
-                    method: 'DELETE',
+                    method: 'PATCH',
+                    data: data,
                 };
             },
             invalidatesTags: ['Preset'],
@@ -52,5 +42,4 @@ export const {
     useGetAllPresetsQuery,
     useCreatePresetMutation,
     useUpdatePresetMutation,
-    useDeletePresetMutation,
 } = presetApi;
