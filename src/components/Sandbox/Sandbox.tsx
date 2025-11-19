@@ -9,8 +9,11 @@ import {
   useCreatePresetMutation,
   useUpdatePresetMutation,
 } from "../../redux/features/preset/presetApi";
+import { useAppDispatch } from "../../redux/hooks";
+import { setActiveSidebarItem } from "../../redux/features/ui/uiSlice";
 
 const Sandbox = () => {
+    const dispatch = useAppDispatch();
   const [device, setDevice] = useState<TDevice>();
   const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -33,16 +36,20 @@ const Sandbox = () => {
     deviceType: "light" | "fan",
     settings: LightSettings | FanSettings,
     deviceName?: string,
-    presetId?: string
+    presetId?: string,
+    deviceId?: string,
   ) => {
     const newDevice: TDevice = {
-      id: `${deviceType}-${Date.now()}`,
+      id: deviceId || `device-${Date.now()}`,
       name: deviceName || (deviceType === "light" ? "Light" : "Fan"),
       type: deviceType,
       settings,
     };
+    console.log(deviceId);
+    
     setDevice(newDevice);
     setCurrentPresetId(presetId || null);
+    dispatch(setActiveSidebarItem(presetId || deviceId));
   };
 
   const removeDevice = () => {
@@ -100,12 +107,14 @@ const Sandbox = () => {
         settings: LightSettings | FanSettings;
         presetName?: string;
         presetId?: string;
+        deviceId?: string;
       }) => {
         addDevice(
           item.deviceType,
           item.settings,
           item.presetName,
-          item.presetId
+          item.presetId,
+          item.deviceId,
         );
       },
       collect: (monitor) => ({
