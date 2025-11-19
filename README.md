@@ -11,6 +11,8 @@ A modern React + Redux + Vite application for simulating and managing smart devi
 - Toast notifications and modal dialogs
 - Built with TypeScript, TailwindCSS, Redux Toolkit, and React DnD
 
+[Live Site](https://device-sandbox.vercel.app/)
+
 ## Getting Started
 
 ### Prerequisites
